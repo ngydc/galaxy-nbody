@@ -49,30 +49,6 @@ class TreeNode {
 		this.divided = true;
 	}
 
-	// insert(newPoint) {
-	// 	if (!this.boundary.containsPoint(newPoint.position)) {
-	// 		return false;
-	// 	}
-	// 	if (this.particle_amount > 1) {
-	// 		for (let quad of this.quadrants) {
-	// 			if (quad.insert(newPoint)) {
-	// 				return true;
-	// 			}
-	// 		}
-	// 	} else if (this.particle_amount === 1) {
-	// 		this.subdivide();
-	// 		for (let quad of this.quadrants) {
-	// 			if (quad.insert(newPoint)) {
-	// 				return true;
-	// 			}
-	// 		}
-	// 	} else {
-	// 		this.body = newPoint;
-	// 		return true;
-	// 	}
-	// 	this.particle_amount += 1;
-	// }
-
 	insert(newParticle) {
 		if (this.particle_amount > 1) {
 			let quadrant = this.getQuadrant(newParticle);
@@ -153,7 +129,8 @@ class TreeNode {
 		let ds = curr_pos.distanceTo(target_pos);
 		force.subVectors(curr_pos, target_pos);
 		force.normalize();
-		let acc = (10 * curr_mass * target_mass) / (ds * ds);
+		// gravity force, softening for avoiding extreme numerical deviation
+		let acc = (10 * curr_mass * target_mass) / Math.sqrt(ds * ds + 0.01 * 0.01);
 		force.multiplyScalar(acc);
 		return force;
 	}
